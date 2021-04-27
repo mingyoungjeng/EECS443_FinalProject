@@ -33,7 +33,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity bcdto7segment_dataflow is
     Port ( x : in STD_LOGIC_VECTOR (3 downto 0);
-           AN : out STD_LOGIC_VECTOR (7 downto 0);
            seg : out STD_LOGIC_VECTOR (6 downto 0));
 end bcdto7segment_dataflow;
 
@@ -41,14 +40,6 @@ architecture Behavioral of bcdto7segment_dataflow is
 signal data: std_logic_vector(6 downto 0) := (others => '0');
 
 begin
-AN(0) <= '0';
-AN(1) <= '1';
-AN(2) <= '1';
-AN(3) <= '1';
-AN(4) <= '1';
-AN(5) <= '1';
-AN(6) <= '1';
-AN(7) <= '1';
 
 seg <= data;
 
@@ -71,6 +62,7 @@ begin
         when "1101" => data <= "0100001";
         when "1110" => data <= "0000110";
         when "1111" => data <= "0001110";
+        when others => data <= "0000000";
         
     end case;
 end process;
