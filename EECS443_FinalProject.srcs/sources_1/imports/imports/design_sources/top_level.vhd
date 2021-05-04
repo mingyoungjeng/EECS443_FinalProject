@@ -140,22 +140,6 @@ BEGIN
     -- seting the new combo
 
 
---set: process (config,locked_state,clk,rst)
---    begin
---        if (clk'event and clk = '1') then
---        	if (rst = '1') then -- reset
-----        		data <= (others => '0');
-----        		locked_state <= '0';
-----        		change_state <= '0';
-----        		active_seg <= 0;
-----        		combination <= starting_combination;
-----			;
-
---        	else
---        	    change_state  <= locked_state and config;
---			end if;
---        end if;
---    end process;
 
     -- Output 
     state_unlocked 	<= locked_state and not change_state;
