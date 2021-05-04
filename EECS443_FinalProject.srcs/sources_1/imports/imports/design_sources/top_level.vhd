@@ -58,16 +58,20 @@ BEGIN
 
 
 -- Unlock
-    unlock: process (BTNL, BTNR, BTNC, clk,rst)
+    unlock: process (BTNL, BTNR, BTNC, config, clk,rst)
     begin
         if (clk'event and clk = '1') then
         	if (rst = '1') then -- reset
+        	    locked_state <= '0';
+        		change_state <= '0';
         		data <= (others => '0');
-        		locked_state <= '0';
         		active_seg <= 0;
-        		combination <= starting_combination;
+        		BTNL_state <= '0';
+        		BTNR_state <= '0';
+        		 
 
         	else
+        		-- Left
 				   if (BTNL='1' and BTNL_state='0') then
 					if (direction = '0') then
 						active_seg <= active_seg_next;
@@ -77,7 +81,9 @@ BEGIN
 						data(4*active_seg+3 downto 4*active_seg) <= inc;
 					end if;
 				end if;     
-			   
+				
+				
+			   -- Right
 				if (BTNR='1' and BTNR_state='0') then
 					if (direction = '1') then
 						active_seg <= active_seg_next;
@@ -88,15 +94,43 @@ BEGIN
 					end if;
 				end if;
 				
+
 				if (BTNC = '1') then
-					if (data = std_logic_vector(to_unsigned(combination, data'length))) then
-						locked_state <= '1'; -- unlocked
+					if (change_state = '1') then
+						-- Update the new combination
+						combination <= to_integer(unsigned (data));
+						
+						-- reset all the things
+						data <= (others => '0');
+						
+						change_state <= '0';
+						locked_state <= '0';
 					else
-						locked_state <= '0'; -- locked
+						-- Check Lock state
+						if (data = std_logic_vector(to_unsigned(combination, data'length))) then
+							locked_state <= '1'; -- unlocked
+						else
+							locked_state <= '0'; -- locked
+						end if;
 					end if;
 				end if;
-				BTNL_state <= BTNL;
-				BTNR_state <= BTNR;
+				
+				-- change to config mode
+
+				if (config ='1' and (change_state /= '1')) then
+				   	change_state  <= locked_state and config;
+        			data <= (others => '0');
+        			active_seg <= 0;
+        			BTNL_state <= '0';
+        			BTNR_state <= '0';
+				else
+					BTNL_state <= BTNL;
+					BTNR_state <= BTNR;
+				
+				end if;
+				
+				
+
 				
 				
         	end if; 
@@ -106,22 +140,22 @@ BEGIN
     -- seting the new combo
 
 
-set: process (config,locked_state,clk,rst)
-    begin
-        if (clk'event and clk = '1') then
-        	if (rst = '1') then -- reset
---        		data <= (others => '0');
---        		locked_state <= '0';
---        		change_state <= '0';
---        		active_seg <= 0;
---        		combination <= starting_combination;
-			change_state <= '0';
+--set: process (config,locked_state,clk,rst)
+--    begin
+--        if (clk'event and clk = '1') then
+--        	if (rst = '1') then -- reset
+----        		data <= (others => '0');
+----        		locked_state <= '0';
+----        		change_state <= '0';
+----        		active_seg <= 0;
+----        		combination <= starting_combination;
+----			;
 
-        	else
-        	    change_state  <= locked_state and config;
-			end if;
-        end if;
-    end process;
+--        	else
+--        	    change_state  <= locked_state and config;
+--			end if;
+--        end if;
+--    end process;
 
     -- Output 
     state_unlocked 	<= locked_state and not change_state;

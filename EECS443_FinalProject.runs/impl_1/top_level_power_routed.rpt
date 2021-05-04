@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date             : Mon May  3 19:26:04 2021
+| Date             : Mon May  3 19:55:23 2021
 | Host             : Thomas-Desktop running 64-bit major release  (build 9200)
 | Command          : report_power -file top_level_power_routed.rpt -pb top_level_power_summary_routed.pb -rpx top_level_power_routed.rpx
 | Design           : top_level
@@ -30,10 +30,10 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 0.100        |
+| Total On-Chip Power (W)  | 0.101        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.003        |
+| Dynamic (W)              | 0.004        |
 | Device Static (W)        | 0.097        |
 | Effective TJA (C/W)      | 4.6          |
 | Max Ambient (C)          | 84.5         |
@@ -52,17 +52,17 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Clocks         |    <0.001 |        3 |       --- |             --- |
-| Slice Logic    |    <0.001 |      278 |       --- |             --- |
-|   LUT as Logic |    <0.001 |      123 |     63400 |            0.19 |
+| Clocks         |     0.001 |        3 |       --- |             --- |
+| Slice Logic    |    <0.001 |      314 |       --- |             --- |
+|   LUT as Logic |    <0.001 |      131 |     63400 |            0.21 |
 |   CARRY4       |    <0.001 |       19 |     15850 |            0.12 |
-|   Register     |    <0.001 |      104 |    126800 |            0.08 |
-|   F7/F8 Muxes  |    <0.001 |        6 |     63400 |           <0.01 |
+|   Register     |    <0.001 |      133 |    126800 |            0.10 |
+|   F7/F8 Muxes  |    <0.001 |        8 |     63400 |            0.01 |
 |   Others       |     0.000 |        4 |       --- |             --- |
-| Signals        |    <0.001 |      212 |       --- |             --- |
-| I/O            |     0.001 |       27 |       210 |           12.86 |
+| Signals        |    <0.001 |      238 |       --- |             --- |
+| I/O            |     0.002 |       27 |       210 |           12.86 |
 | Static Power   |     0.097 |          |           |                 |
-| Total          |     0.100 |          |           |                 |
+| Total          |     0.101 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -141,7 +141,7 @@ Table of Contents
 +-----------+-----------+
 | Name      | Power (W) |
 +-----------+-----------+
-| top_level |     0.003 |
+| top_level |     0.004 |
 +-----------+-----------+
 
 
