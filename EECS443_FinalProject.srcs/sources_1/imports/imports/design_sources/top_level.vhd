@@ -75,20 +75,24 @@ BEGIN
                 -- Left
                 if (BTNL = '1' and BTNL_state = '0') then
                     if (direction = '0') then
-                        active_seg                                               <= active_seg_next;
-                        direction                                                <= '1';
-                        data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= inc;
+                        if (active_seg /= 0) then
+                            active_seg                                               <= active_seg_next;
+                            direction                                                <= '1';
+                            data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= inc;
+                        end if;
                     else
                         data(4 * active_seg + 3 downto 4 * active_seg) <= inc;
                     end if;
                 end if;
 
                 -- Right
-                if (BTNR = '1' and BTNR_state = '0' and active_seg /= 0) then
+                if (BTNR = '1' and BTNR_state = '0') then
                     if (direction = '1') then
-                        active_seg                                               <= active_seg_next;
-                        direction                                                <= '0';
-                        data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= dec;
+                        if (active_seg /= 0) then
+                            active_seg                                               <= active_seg_next;
+                            direction                                                <= '0';
+                            data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= dec;
+                        end if;
                     else
                         data(4 * active_seg + 3 downto 4 * active_seg) <= dec;
                     end if;

@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/top_level.tcl"
+  variable script "/home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/top_level.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,28 +70,27 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param chipscope.maxJobs 6
+set_param chipscope.maxJobs 4
 set_param xicom.use_bs_reader 1
-set_msg_config -id {Common 17-41} -limit 10000000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a100tcsg324-1
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.cache/wt [current_project]
-set_property parent.project_path D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.xpr [current_project]
+set_property webtalk.parent_dir /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.cache/wt [current_project]
+set_property parent.project_path /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
-set_property ip_output_repo d:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.cache/ip [current_project]
+set_property ip_output_repo /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_vhdl -library xil_defaultlib {
-  D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/math_real.vhdl
-  D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/math_real-body.vhdl
-  D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/seven_segment_driver.vhd
-  D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/top_level.vhd
+  /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/math_real.vhdl
+  /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/math_real-body.vhdl
+  /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/seven_segment_driver.vhd
+  /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/sources_1/imports/imports/design_sources/top_level.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -102,8 +101,8 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/constrs_1/imports/Nexys4_Board_Material/Nexys4DDR_Master.xdc
-set_property used_in_implementation false [get_files D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.srcs/constrs_1/imports/Nexys4_Board_Material/Nexys4DDR_Master.xdc]
+read_xdc /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/constrs_1/imports/Nexys4_Board_Material/Nexys4DDR_Master.xdc
+set_property used_in_implementation false [get_files /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.srcs/constrs_1/imports/Nexys4_Board_Material/Nexys4DDR_Master.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 close [open __synthesis_is_running__ w]

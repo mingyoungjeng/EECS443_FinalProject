@@ -6,14 +6,10 @@
 # Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 # 
 
-echo "This script was generated under a different operating system."
-echo "Please update the PATH and LD_LIBRARY_PATH variables below, before executing this script"
-exit
-
 if [ -z "$PATH" ]; then
-  PATH=D:/Xilinx/Vivado/2020.2/ids_lite/ISE/bin/nt64;D:/Xilinx/Vivado/2020.2/ids_lite/ISE/lib/nt64:D:/Xilinx/Vivado/2020.2/bin
+  PATH=/tools/Xilinx/Vitis/2020.2/bin:/tools/Xilinx/Vivado/2020.2/ids_lite/ISE/bin/lin64:/tools/Xilinx/Vivado/2020.2/bin
 else
-  PATH=D:/Xilinx/Vivado/2020.2/ids_lite/ISE/bin/nt64;D:/Xilinx/Vivado/2020.2/ids_lite/ISE/lib/nt64:D:/Xilinx/Vivado/2020.2/bin:$PATH
+  PATH=/tools/Xilinx/Vitis/2020.2/bin:/tools/Xilinx/Vivado/2020.2/ids_lite/ISE/bin/lin64:/tools/Xilinx/Vivado/2020.2/bin:$PATH
 fi
 export PATH
 
@@ -24,7 +20,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.runs/impl_1'
+HD_PWD='/home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/impl_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log
