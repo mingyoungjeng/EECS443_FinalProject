@@ -2,11 +2,11 @@ set_property SRC_FILE_INFO {cfile:/home/mingyoungjeng/Downloads/EECS443_FinalPro
 set_property src_info {type:XDC file:1 line:7 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN E3    IOSTANDARD LVCMOS33 } [get_ports { clk }]; #IO_L12P_T1_MRCC_35 Sch=clk100mhz
 set_property src_info {type:XDC file:1 line:28 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN V10   IOSTANDARD LVCMOS33 } [get_ports { rst_combo }]; #IO_L21P_T3_DQS_14 Sch=sw[15]
+set_property -dict { PACKAGE_PIN V10   IOSTANDARD LVCMOS33 } [get_ports { rst_hard }]; #IO_L21P_T3_DQS_14 Sch=sw[15]
 set_property src_info {type:XDC file:1 line:48 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN V11   IOSTANDARD LVCMOS33 } [get_ports { rst_combo_warn }]; #IO_L21N_T3_DQS_A06_D22_14 Sch=led[15]
+set_property -dict { PACKAGE_PIN V11   IOSTANDARD LVCMOS33 } [get_ports { rst_hard_warn }]; #IO_L21N_T3_DQS_A06_D22_14 Sch=led[15]
 set_property src_info {type:XDC file:1 line:50 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN R12   IOSTANDARD LVCMOS33 } [get_ports { state_set }]; #IO_L5P_T0_D06_14 Sch=led16_b
+set_property -dict { PACKAGE_PIN R12   IOSTANDARD LVCMOS33 } [get_ports { state_change }]; #IO_L5P_T0_D06_14 Sch=led16_b
 set_property src_info {type:XDC file:1 line:51 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN M16   IOSTANDARD LVCMOS33 } [get_ports { state_unlocked }]; #IO_L10P_T1_D14_14 Sch=led16_g
 set_property src_info {type:XDC file:1 line:52 export:INPUT save:INPUT read:READ} [current_design]

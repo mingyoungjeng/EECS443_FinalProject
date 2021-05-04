@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
-| Date         : Mon May  3 21:20:44 2021
+| Date         : Mon May  3 23:29:30 2021
 | Host         : Recurse running 64-bit Arch Linux
 | Command      : report_drc -file top_level_drc_routed.rpt -pb top_level_drc_routed.pb -rpx top_level_drc_routed.rpx
 | Design       : top_level
@@ -24,11 +24,12 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 1
+             Violations found: 3
 +----------+----------+-----------------------------------------------------+------------+
 | Rule     | Severity | Description                                         | Violations |
 +----------+----------+-----------------------------------------------------+------------+
 | CFGBVS-1 | Warning  | Missing CFGBVS and CONFIG_VOLTAGE Design Properties | 1          |
+| PDRC-153 | Warning  | Gated clock check                                   | 2          |
 +----------+----------+-----------------------------------------------------+------------+
 
 2. REPORT DETAILS
@@ -44,6 +45,16 @@ Neither the CFGBVS nor CONFIG_VOLTAGE voltage property is set in the current_des
  #where value2 is the voltage provided to configuration bank 0
 
 Refer to the device configuration user guide for more information.
+Related violations: <none>
+
+PDRC-153#1 Warning
+Gated clock check  
+Net FSM_onehot_lock_next_reg[2]_i_1_n_0 is a gated clock net sourced by a combinational pin FSM_onehot_lock_next_reg[2]_i_1/O, cell FSM_onehot_lock_next_reg[2]_i_1. This is not good design practice and will likely impact performance. For SLICE registers, for example, use the CE pin to control the loading of data.
+Related violations: <none>
+
+PDRC-153#2 Warning
+Gated clock check  
+Net rst_sig__0 is a gated clock net sourced by a combinational pin rst_sig_reg_i_2/O, cell rst_sig_reg_i_2. This is not good design practice and will likely impact performance. For SLICE registers, for example, use the CE pin to control the loading of data.
 Related violations: <none>
 
 
