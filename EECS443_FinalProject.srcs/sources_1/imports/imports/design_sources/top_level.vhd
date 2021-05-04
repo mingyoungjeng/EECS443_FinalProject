@@ -7,11 +7,14 @@ ENTITY top_level IS
     PORT(clk                                     : IN  STD_LOGIC;
          BTNC, BTNL, BTNR                        : IN  STD_LOGIC;
          config                                  : in  std_logic; -- enable setting mode
-         rst, rst_hard                           : in  STD_logic;
+         rst_combo                               : in  std_logic; -- rest the combo when resting 
+         rst                                     : in  STD_logic;
          AN                                      : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
          CA                                      : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
-         state_unlocked, state_locked, state_change : out std_logic;
-         rst_hard_warn                          : out std_logic
+         state_unlocked, state_locked, state_set : out std_logic;
+         --state_out : out std_logic_vector(1 Downto 0);
+         --config_out: out std_logic ;
+         rst_combo_warn                          : out std_logic
         );
 END top_level;
 
@@ -33,98 +36,125 @@ ARCHITECTURE behavior OF top_level IS
     CONSTANT f_board   : REAL    := 100.0E6; -- 100 MHz
     CONSTANT f_flicker : REAL    := 62.5; -- 62.5 Hz
     CONSTANT n_digits  : NATURAL := 8;  -- 8 7Segment Digits
-    
-    type lock_type is (locked, unlocked, change);
-    signal lock_state, lock_next: lock_type;
-    
-    signal BTNL_state, BTNR_state: std_logic;
-    signal reset, rst_sig: std_logic;
 
     signal data                        : STD_LOGIC_VECTOR(4 * n_digits - 1 DOWNTO 0) := (others => '0'); --data_next
     signal active_seg, active_seg_next : natural                                     := n_digits - 1;
     signal direction                   : std_logic                                   := '1'; -- 0 is "clockwise", 1 is "anticlockwise"
     signal inc, dec                    : std_logic_vector(3 downto 0)                := (others => '0');
+    signal BTNL_state, BTNR_state      : std_logic                                   := '0';
 
-    constant default_combination : natural := 16#1f000000#;
-    signal combination           : natural := default_combination;
+    -- States
+    -- Locked
+    signal locked_state : std_logic := '0'; --  (0 := locked; 1:= unlocked)
+
+    -- Change
+    signal change_state : std_logic := '0'; --  1:= change the combo mode
+
+    signal combination           : natural := 16#1f000000#; --1234ABCD
+    constant default_combination : natural := 16#1f000000#; --1234ABCD
 
 BEGIN
 
-    reset <= rst or rst_sig;
-    process(clk, reset)
+    -- Unlock
+    unlock : process(BTNL, BTNR, BTNC, config, clk, rst)
     begin
-        if (reset = '1') then
-            BTNL_state <= '0';
-            BTNR_state <= '0';
-            data <= (others => '0');
-            active_seg <= n_digits - 1;
-            direction <= '1';
-        elsif (clk'event and clk = '1') then
-            -- Left
-            if (BTNL = '1' and BTNL_state = '0') then
-                if (direction = '0') then
-                    if (active_seg /= 0) then
-                        active_seg                                               <= active_seg_next;
-                        direction                                                <= '1';
-                        data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= inc;
-                    end if;
-                else
-                    data(4 * active_seg + 3 downto 4 * active_seg) <= inc;
+        if (clk'event and clk = '1') then
+            if (rst = '1') then         -- reset
+                locked_state <= '0';
+                change_state <= '0';
+                data         <= (others => '0');
+                active_seg   <= 0;
+                BTNL_state   <= '0';
+                BTNR_state   <= '0';
+                direction    <= '0';
+
+                if (rst_combo = '1') then
+                    combination <= default_combination;
                 end if;
-            end if;
-    
-            -- Right
-            if (BTNR = '1' and BTNR_state = '0') then
-                if (direction = '1') then
-                    if (active_seg /= 0) then
-                        active_seg                                               <= active_seg_next;
-                        direction                                                <= '0';
-                        data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= dec;
+            else
+                -- Left
+                if (BTNL = '1' and BTNL_state = '0') then
+                    if (direction = '0') then
+                        if (active_seg /= 0) then
+                            active_seg                                               <= active_seg_next;
+                            direction                                                <= '1';
+                            data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= inc;
+                        end if;
+                    else
+                        data(4 * active_seg + 3 downto 4 * active_seg) <= inc;
                     end if;
-                else
-                    data(4 * active_seg + 3 downto 4 * active_seg) <= dec;
                 end if;
-            end if;
-        
-            BTNL_state <= BTNL;
-            BTNR_state <= BTNR;
-            lock_state <= lock_next;
-        end if;
-    end process;
-    
-    process (lock_state, config, BTNC, reset)
-    begin
-        if (reset = '1') then
-            if (rst_hard = '1') then
-                combination <= default_combination;
-            end if;
-            
-            rst_sig <= '0';
-        else
-            case (lock_state) is
-                when locked =>
-                    if (BTNC = '1' and unsigned(data) = combination) then
-                        rst_sig <= '1';
-                        lock_next <= unlocked;
+
+                -- Right
+                if (BTNR = '1' and BTNR_state = '0') then
+                    if (direction = '1') then
+                        if (active_seg /= 0) then
+                            active_seg                                               <= active_seg_next;
+                            direction                                                <= '0';
+                            data(4 * active_seg_next + 3 downto 4 * active_seg_next) <= dec;
+                        end if;
+                    else
+                        data(4 * active_seg + 3 downto 4 * active_seg) <= dec;
                     end if;
-                when unlocked =>
-                    if (config = '1') then
-                        lock_next <= change; 
-                    end if;
-                when change =>
-                    if (BTNC = '1') then
+                end if;
+
+                if (BTNC = '1') then
+                    if (change_state = '1') then
+                        -- Update the new combination
                         combination <= to_integer(unsigned(data));
-                        rst_sig <= '1';
-                        lock_next <= locked;
+
+                        -- reset all the things
+                        change_state <= '0';
+                        locked_state <= '0';
+                        data         <= (others => '0');
+                        active_seg   <= 0;
+                        BTNL_state   <= '0';
+                        BTNR_state   <= '0';
+                        direction    <= '0';
+
+                    else
+                        -- Check Lock state
+                        if (data = std_logic_vector(to_unsigned(combination, data'length))) then
+                            locked_state <= '1'; -- unlocked
+                        else
+                            locked_state <= '0'; -- locked
+                        end if;
                     end if;
-            end case;
+                end if;
+
+                -- change to config mode
+
+                if (config = '1' and (change_state /= '1') and (locked_state = '1')) then
+                    change_state <= locked_state and config;
+                    data         <= (others => '0');
+                    active_seg   <= 0;
+                    BTNL_state   <= '0';
+                    BTNR_state   <= '0';
+                    direction    <= '0';
+
+                else
+
+                    BTNL_state <= BTNL;
+                    BTNR_state <= BTNR;
+
+                end if;
+
+            end if;
         end if;
     end process;
-    state_locked <= '1' when lock_state = locked else '0'; 
-    state_unlocked <= '1' when lock_state = unlocked else '0';
-    state_change <= '1' when lock_state = change else '0';
-    
-    rst_hard_warn <= rst_hard;
+
+    -- seting the new combo
+
+    -- Output 
+    state_unlocked <= locked_state and not change_state;
+    state_locked   <= not locked_state;
+    state_set      <= change_state;
+
+    rst_combo_warn <= rst_combo;
+
+    -- temp state out
+    --state_out <= (0 => locked_state, 1 => change_state);
+    --config_out <= config;
 
     -- 7 Seg
     active_seg_next <= (active_seg + 7) mod n_digits;

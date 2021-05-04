@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Mon May  3 23:28:14 2021
-# Process ID: 348236
+# Start of session at: Mon May  3 21:19:30 2021
+# Process ID: 117426
 # Current directory: /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1
 # Command line: vivado -log top_level.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_level.tcl
 # Log file: /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/top_level.vds
