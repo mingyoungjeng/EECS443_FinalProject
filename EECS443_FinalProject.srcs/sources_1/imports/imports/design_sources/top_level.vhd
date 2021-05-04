@@ -6,9 +6,13 @@ USE WORK.MATH_REAL.ALL;
 ENTITY top_level IS
 	PORT(clk : IN  STD_LOGIC;
 	     BTNC, BTNL, BTNR      : IN  STD_LOGIC;
+	     config : in std_logic; -- enable setting mode
+	     rst	   : in STD_logic;
 	     AN        : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
 	     CA        : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
-	     unlocked: out std_logic
+	     state_unlocked, state_locked, state_set: out std_logic;
+	     state_out : out std_logic_vector(1 Downto 0);
+	     config_out: out std_logic
 	    );
 END top_level;
 
@@ -31,50 +35,104 @@ ARCHITECTURE behavior OF top_level IS
     CONSTANT f_flicker : REAL := 62.5;    -- 62.5 Hz
     CONSTANT n_digits  : NATURAL := 8;    -- 8 7Segment Digits
 	
-    signal data, data_next: STD_LOGIC_VECTOR(4*n_digits - 1 DOWNTO 0) := (others =>'0');
+    signal data: STD_LOGIC_VECTOR(4*n_digits - 1 DOWNTO 0) := (others =>'0'); --data_next
     signal active_seg, active_seg_next: natural := n_digits-1;
     signal direction: std_logic := '1'; -- 0 is "clockwise", 1 is "anticlockwise"
-    signal combination: natural := 16#1234ABCD#;
     signal inc, dec: std_logic_vector(3 downto 0) := (others => '0');
     signal BTNL_state, BTNR_state: std_logic := '0';
+    
+    -- States
+    	-- Locked
+    	signal locked_state: std_logic := '0'; --  (0 := locked; 1:= unlocked)
+    
+   		-- Change
+    	signal change_state: std_logic := '0'; --  1:= change the combo mode
+    
+
+    signal combination: natural := 16#1f000000#; --1234ABCD
+    constant starting_combination: natural := 16#1f000000#; --1234ABCD
+
 
 BEGIN
-    process (BTNL, BTNR, BTNC, clk)
+
+
+
+-- Unlock
+    unlock: process (BTNL, BTNR, BTNC, clk,rst)
     begin
-        if (clk'event and clk = '1') then   
-            if (BTNL='1' and BTNL_state='0') then
-                if (direction = '0') then
-                    active_seg <= active_seg_next;
-                    direction <= '1';
-                    data(4*active_seg_next+3 downto 4*active_seg_next) <= inc;
-                else
-                    data(4*active_seg+3 downto 4*active_seg) <= inc;
-                end if;
-            end if;     
-           
-            if (BTNR='1' and BTNR_state='0') then
-                if (direction = '1') then
-                    active_seg <= active_seg_next;
-                    direction <= '0';
-                    data(4*active_seg_next+3 downto 4*active_seg_next) <= dec;
-                else
-                    data(4*active_seg+3 downto 4*active_seg) <= dec;
-                end if;
-            end if;
-            
-            if (BTNC = '1') then
-                if (data = std_logic_vector(to_unsigned(combination, data'length))) then
-                    unlocked <= '1';
-                else
-                    unlocked <= '0';
-                end if;
-            end if;
-            
-            BTNL_state <= BTNL;
-            BTNR_state <= BTNR;
+        if (clk'event and clk = '1') then
+        	if (rst = '1') then -- reset
+        		data <= (others => '0');
+        		locked_state <= '0';
+        		active_seg <= 0;
+        		combination <= starting_combination;
+
+        	else
+				   if (BTNL='1' and BTNL_state='0') then
+					if (direction = '0') then
+						active_seg <= active_seg_next;
+						direction <= '1';
+						data(4*active_seg_next+3 downto 4*active_seg_next) <= inc;
+					else
+						data(4*active_seg+3 downto 4*active_seg) <= inc;
+					end if;
+				end if;     
+			   
+				if (BTNR='1' and BTNR_state='0') then
+					if (direction = '1') then
+						active_seg <= active_seg_next;
+						direction <= '0';
+						data(4*active_seg_next+3 downto 4*active_seg_next) <= dec;
+					else
+						data(4*active_seg+3 downto 4*active_seg) <= dec;
+					end if;
+				end if;
+				
+				if (BTNC = '1') then
+					if (data = std_logic_vector(to_unsigned(combination, data'length))) then
+						locked_state <= '1'; -- unlocked
+					else
+						locked_state <= '0'; -- locked
+					end if;
+				end if;
+				BTNL_state <= BTNL;
+				BTNR_state <= BTNR;
+				
+				
+        	end if; 
         end if;
     end process;
     
+    -- seting the new combo
+
+
+set: process (config,locked_state,clk,rst)
+    begin
+        if (clk'event and clk = '1') then
+        	if (rst = '1') then -- reset
+--        		data <= (others => '0');
+--        		locked_state <= '0';
+--        		change_state <= '0';
+--        		active_seg <= 0;
+--        		combination <= starting_combination;
+			change_state <= '0';
+
+        	else
+        	    change_state  <= locked_state and config;
+			end if;
+        end if;
+    end process;
+
+    -- Output 
+    state_unlocked 	<= locked_state and not change_state;
+    state_locked   	<= not locked_state;
+    state_set 		<= change_state;
+    
+    -- temp state out
+    state_out <= (0 => locked_state, 1 => change_state);
+    config_out <= config;
+    
+    -- 7 Seg
     active_seg_next <= (active_seg + 7) mod n_digits;
     inc <= std_logic_vector(unsigned(data(4*active_seg+3 downto 4*active_seg)) + 1);
     dec <= std_logic_vector(unsigned(data(4*active_seg+3 downto 4*active_seg)) - 1);
@@ -90,4 +148,5 @@ BEGIN
                    anodes => AN,
                    cathodes => CA
                   );
+
 END behavior;
