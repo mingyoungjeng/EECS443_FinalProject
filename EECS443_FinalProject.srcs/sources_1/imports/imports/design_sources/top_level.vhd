@@ -47,7 +47,7 @@ ARCHITECTURE behavior OF top_level IS
     signal inc, dec                    : std_logic_vector(3 downto 0)                := (others => '0');
     signal BTNL_state, BTNR_state, BTNC_state, config_state      : std_logic := '0';
     
-    signal reset, rst_sig, change_combination: std_logic := '0';
+    signal reset, rst_sig: std_logic := '0';
 
     type lock_type is (locked, unlocked, change);
     signal lock_state, lock_next: lock_type := locked;
@@ -61,10 +61,7 @@ BEGIN
     process(clk, reset)
     begin
         if (reset = '1') then         -- reset
-            if (change_combination = '1') then
-                combination <= to_integer(unsigned(data));
-                change_combination <= '0';
-            elsif (rst_hard = '1') then
+            if (rst_hard = '1') then
                 combination <= default_combination;
             end if;
 
@@ -123,8 +120,7 @@ BEGIN
                 when change =>
                     state_change <= '1';
                     if (BTNC = '1') then
-                        rst_sig <= '1';
-                        change_combination <= '1';
+                        combination <= to_integer(unsigned(data));
                         lock_next <= locked;
                     end if;
                     if (config = '1' and config_state = '0') then
