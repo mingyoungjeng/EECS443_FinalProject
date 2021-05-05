@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
-| Date         : Wed May  5 16:18:49 2021
+| Date         : Wed May  5 16:22:56 2021
 | Host         : Recurse running 64-bit Arch Linux
 | Command      : report_utilization -file top_level_utilization_synth.rpt -pb top_level_utilization_synth.pb
 | Design       : top_level
@@ -146,20 +146,20 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT6     |   92 |                 LUT |
+| LUT6     |   89 |                 LUT |
 | FDRE     |   71 |        Flop & Latch |
+| LUT4     |   44 |                 LUT |
 | LUT2     |   42 |                 LUT |
 | FDCE     |   36 |        Flop & Latch |
-| LUT5     |   35 |                 LUT |
 | LDCE     |   31 |        Flop & Latch |
-| LUT4     |   28 |                 LUT |
+| LUT5     |   25 |                 LUT |
 | OBUF     |   19 |                  IO |
 | CARRY4   |   19 |          CarryLogic |
-| LUT3     |   14 |                 LUT |
+| LUT3     |   15 |                 LUT |
 | IBUF     |    7 |                  IO |
 | MUXF7    |    6 |               MuxFx |
 | FDPE     |    4 |        Flop & Latch |
-| LUT1     |    3 |                 LUT |
+| LUT1     |    2 |                 LUT |
 | BUFG     |    1 |               Clock |
 +----------+------+---------------------+
 

@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
-| Date         : Wed May  5 16:19:36 2021
+| Date         : Wed May  5 16:23:44 2021
 | Host         : Recurse running 64-bit Arch Linux
 | Command      : report_methodology -file top_level_methodology_drc_routed.rpt -pb top_level_methodology_drc_routed.pb -rpx top_level_methodology_drc_routed.rpx
 | Design       : top_level
@@ -23,11 +23,11 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 55
+             Violations found: 56
 +-----------+----------+-------------------------------+------------+
 | Rule      | Severity | Description                   | Violations |
 +-----------+----------+-------------------------------+------------+
-| LUTAR-1   | Warning  | LUT drives async reset alert  | 1          |
+| LUTAR-1   | Warning  | LUT drives async reset alert  | 2          |
 | TIMING-18 | Warning  | Missing input or output delay | 23         |
 | TIMING-20 | Warning  | Non-clocked latch             | 31         |
 +-----------+----------+-------------------------------+------------+
@@ -36,11 +36,16 @@ Table of Contents
 -----------------
 LUTAR-1#1 Warning
 LUT drives async reset alert  
-LUT cell active_seg[2]_i_3, with 2 or more inputs, drives asynchronous preset/clear pin(s) BTNL_state_reg/CLR, BTNR_state_reg/CLR, change_combination_reg/CLR,
-data_reg[0]/CLR, data_reg[10]/CLR, data_reg[11]/CLR, data_reg[12]/CLR,
-data_reg[13]/CLR, data_reg[14]/CLR, data_reg[15]/CLR, data_reg[16]/CLR,
-data_reg[17]/CLR, data_reg[18]/CLR, data_reg[19]/CLR, data_reg[1]/CLR
- (the first 15 of 40 listed). The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+LUT cell active_seg[2]_i_3, with 2 or more inputs, drives asynchronous preset/clear pin(s) BTNL_state_reg/CLR, BTNR_state_reg/CLR, data_reg[0]/CLR, data_reg[10]/CLR,
+data_reg[11]/CLR, data_reg[12]/CLR, data_reg[13]/CLR, data_reg[14]/CLR,
+data_reg[15]/CLR, data_reg[16]/CLR, data_reg[17]/CLR, data_reg[18]/CLR,
+data_reg[19]/CLR, data_reg[1]/CLR, data_reg[20]/CLR
+ (the first 15 of 39 listed). The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+LUTAR-1#2 Warning
+LUT drives async reset alert  
+LUT cell change_combination_i_2, with 2 or more inputs, drives asynchronous preset/clear pin(s) change_combination_reg/CLR. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
 Related violations: <none>
 
 TIMING-18#1 Warning
