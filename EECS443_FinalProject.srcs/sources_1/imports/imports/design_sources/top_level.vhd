@@ -45,9 +45,9 @@ ARCHITECTURE behavior OF top_level IS
     signal active_seg, active_seg_next : natural                                     := n_digits - 1;
     signal direction                   : std_logic                                   := '1'; -- 0 is "clockwise", 1 is "anticlockwise"
     signal inc, dec                    : std_logic_vector(3 downto 0)                := (others => '0');
-    signal BTNL_state, BTNR_state      : std_logic := '0';
+    signal BTNL_state, BTNR_state, BTNC_state, config_state      : std_logic := '0';
     
-    signal reset, rst_sig: std_logic := '0';
+    signal reset, rst_sig, change_combination: std_logic := '0';
 
     type lock_type is (locked, unlocked, change);
     signal lock_state, lock_next: lock_type := locked;
@@ -58,14 +58,22 @@ ARCHITECTURE behavior OF top_level IS
 BEGIN
 
     reset <= rst or rst_sig;
-    process(clk, rst)
+    process(clk, reset)
     begin
-        if (rst = '1') then         -- reset
+        if (reset = '1') then         -- reset
+            if (change_combination = '1') then
+                combination <= to_integer(unsigned(data));
+                change_combination <= '0';
+            elsif (rst_hard = '1') then
+                combination <= default_combination;
+            end if;
+
             data         <= (others => '0');
             active_seg   <= n_digits - 1;
             BTNL_state   <= '0';
             BTNR_state   <= '0';
             direction    <= '1';
+            rst_sig      <= '0';
         elsif (clk'event and clk = '1') then
             -- Left
             if (BTNL = '1' and BTNL_state = '0') then
@@ -92,43 +100,43 @@ BEGIN
                     data(4 * active_seg + 3 downto 4 * active_seg) <= dec;
                 end if;
             end if;
-            
-            lock_state <= lock_next;
-            BTNL_state <= BTNL;
-            BTNR_state <= BTNR;
-        end if;
-    end process;
-    
-    process (lock_state, BTNC, config, reset)
-    begin
-        if (reset = '1') then
-            rst_sig <= '0';
-            if (rst_hard = '1') then
-                combination <= default_combination;
-            end if;
-        else 
+
             state_locked <= '0';
             state_unlocked <= '0';
             state_change <= '0';
             case lock_state is
                 when locked =>
                     state_locked <= '1';
-                    if (BTNC = '1' and unsigned(data) = combination) then
-                        rst_sig <= '1';
+                    if (BTNC = '1' and BTNC_state = '0' and unsigned(data) = combination) then
                         lock_next <= unlocked;
                     end if;
                 when unlocked =>
                     state_unlocked <= '1';
-                    if (config = '1') then
+                    if (BTNC = '1' and BTNC_state = '0') then
+                        rst_sig <= '1';
+                        lock_next <= locked;
+                    end if;
+                    if (config = '1' and config_state = '0') then
+                        rst_sig <= '1';
                         lock_next <= change;
                     end if;
                 when change =>
                     state_change <= '1';
                     if (BTNC = '1') then
                         rst_sig <= '1';
+                        change_combination <= '1';
                         lock_next <= locked;
                     end if;
+                    if (config = '1' and config_state = '0') then
+                        lock_next <= unlocked;
+                    end if;
             end case;
+            
+            lock_state <= lock_next;
+            BTNL_state <= BTNL;
+            BTNR_state <= BTNR;
+            BTNC_state <= BTNC;
+            config_state <= config;
         end if;
     end process;
 

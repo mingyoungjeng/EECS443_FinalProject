@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (lin64) Build 3064766 Wed Nov 18 09:12:47 MST 2020
-| Date         : Tue May  4 16:35:01 2021
+| Date         : Wed May  5 16:19:22 2021
 | Host         : Recurse running 64-bit Arch Linux
 | Command      : report_control_sets -verbose -file top_level_control_sets_placed.rpt
 | Design       : top_level
@@ -27,7 +27,7 @@ Table of Contents
 |    Minimum number of control sets                        |    15 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    66 |
+| Unused register locations in slices containing registers |    58 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -40,14 +40,14 @@ Table of Contents
 |       Fanout       | Count |
 +--------------------+-------+
 | Total control sets |    15 |
-| >= 0 to < 4        |     4 |
-| >= 4 to < 6        |     9 |
+| >= 0 to < 4        |     2 |
+| >= 4 to < 6        |    10 |
 | >= 6 to < 8        |     0 |
 | >= 8 to < 10       |     0 |
 | >= 10 to < 12      |     0 |
 | >= 12 to < 14      |     0 |
 | >= 14 to < 16      |     0 |
-| >= 16              |     2 |
+| >= 16              |     3 |
 +--------------------+-------+
 * Control sets can be remapped at either synth_design or opt_design
 
@@ -58,11 +58,11 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              40 |           14 |
-| No           | No                    | Yes                    |               2 |            1 |
-| No           | Yes                   | No                     |               1 |            1 |
-| Yes          | No                    | No                     |              31 |            8 |
-| Yes          | No                    | Yes                    |              36 |           27 |
+| No           | No                    | No                     |              66 |           18 |
+| No           | No                    | Yes                    |               3 |            3 |
+| No           | Yes                   | No                     |               0 |            0 |
+| Yes          | No                    | No                     |              36 |           11 |
+| Yes          | No                    | Yes                    |              37 |           21 |
 | Yes          | Yes                   | No                     |               0 |            0 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
@@ -70,24 +70,24 @@ Table of Contents
 4. Detailed Control Set Information
 -----------------------------------
 
-+--------------------------------------+-----------------------+------------------+------------------+----------------+--------------+
-|             Clock Signal             |     Enable Signal     | Set/Reset Signal | Slice Load Count | Bel Load Count | Bels / Slice |
-+--------------------------------------+-----------------------+------------------+------------------+----------------+--------------+
-|  rst_sig__0                          |                       | reset            |                1 |              1 |         1.00 |
-|  clk_IBUF_BUFG                       |                       | rst_IBUF         |                1 |              2 |         2.00 |
-|  FSM_onehot_lock_next_reg[2]_i_1_n_0 |                       |                  |                1 |              3 |         3.00 |
-|  state_unlocked_reg_i_1_n_0          |                       |                  |                3 |              3 |         1.00 |
-|  clk_IBUF_BUFG                       | data[11]_i_1_n_0      | rst_IBUF         |                3 |              4 |         1.33 |
-|  clk_IBUF_BUFG                       | data[15]_i_1_n_0      | rst_IBUF         |                3 |              4 |         1.33 |
-|  clk_IBUF_BUFG                       | data[19]_i_1_n_0      | rst_IBUF         |                4 |              4 |         1.00 |
-|  clk_IBUF_BUFG                       | data[23]_i_1_n_0      | rst_IBUF         |                2 |              4 |         2.00 |
-|  clk_IBUF_BUFG                       | data[31]_i_1_n_0      | rst_IBUF         |                2 |              4 |         2.00 |
-|  clk_IBUF_BUFG                       | data[3]_i_1_n_0       | rst_IBUF         |                2 |              4 |         2.00 |
-|  clk_IBUF_BUFG                       | data[7]_i_1_n_0       | rst_IBUF         |                4 |              4 |         1.00 |
-|  clk_IBUF_BUFG                       | active_seg[2]_i_1_n_0 | rst_IBUF         |                3 |              4 |         1.33 |
-|  clk_IBUF_BUFG                       | data[27]_i_1_n_0      | rst_IBUF         |                4 |              4 |         1.00 |
-|  clk_IBUF_BUFG                       | i0/sel                |                  |                8 |             31 |         3.88 |
-|  clk_IBUF_BUFG                       |                       |                  |               10 |             34 |         3.40 |
-+--------------------------------------+-----------------------+------------------+------------------+----------------+--------------+
++----------------------+----------------------------+------------------+------------------+----------------+--------------+
+|     Clock Signal     |        Enable Signal       | Set/Reset Signal | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------------+----------------------------+------------------+------------------+----------------+--------------+
+|  clk_IBUF_BUFG       | change_combination_i_1_n_0 | reset            |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG       |                            | reset            |                3 |              3 |         1.00 |
+|  clk_IBUF_BUFG       | data[11]_i_1_n_0           | reset            |                3 |              4 |         1.33 |
+|  clk_IBUF_BUFG       | data[15]_i_1_n_0           | reset            |                3 |              4 |         1.33 |
+|  clk_IBUF_BUFG       | data[19]_i_1_n_0           | reset            |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG       | data[23]_i_1_n_0           | reset            |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG       | data[27]_i_1_n_0           | reset            |                3 |              4 |         1.33 |
+|  clk_IBUF_BUFG       | data[31]_i_1_n_0           | reset            |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG       | data[3]_i_1_n_0            | reset            |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG       | data[7]_i_1_n_0            | reset            |                3 |              4 |         1.33 |
+|  clk_IBUF_BUFG       | active_seg[2]_i_1_n_0      | reset            |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG       | config_state_i_1_n_0       |                  |                3 |              5 |         1.67 |
+|  clk_IBUF_BUFG       | i0/sel                     |                  |                8 |             31 |         3.88 |
+|  combination__0_BUFG |                            |                  |                9 |             31 |         3.44 |
+|  clk_IBUF_BUFG       |                            |                  |                9 |             35 |         3.89 |
++----------------------+----------------------------+------------------+------------------+----------------+--------------+
 
 
