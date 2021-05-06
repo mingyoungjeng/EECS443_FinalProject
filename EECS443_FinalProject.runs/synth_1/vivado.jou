@@ -1,12 +1,12 @@
 #-----------------------------------------------------------
 # Vivado v2020.2 (64-bit)
-# SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Wed May  5 16:59:10 2021
-# Process ID: 219489
-# Current directory: /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1
-# Command line: vivado -log top_level.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_level.tcl
-# Log file: /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/top_level.vds
-# Journal file: /home/mingyoungjeng/Downloads/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/vivado.jou
+# Start of session at: Wed May  5 20:40:57 2021
+# Process ID: 46504
+# Current directory: D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1
+# Command line: vivado.exe -log top_level.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_level.tcl
+# Log file: D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1/top_level.vds
+# Journal file: D:/School/EECS443/FinalProject/EECS443_FinalProject/EECS443_FinalProject.runs/synth_1\vivado.jou
 #-----------------------------------------------------------
 source top_level.tcl -notrace

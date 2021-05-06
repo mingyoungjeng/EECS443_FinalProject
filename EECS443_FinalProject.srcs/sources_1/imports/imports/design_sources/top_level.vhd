@@ -47,7 +47,6 @@ ARCHITECTURE behavior OF top_level IS
     signal inc, dec                    : std_logic_vector(3 downto 0)                := (others => '0');
     signal BTNL_state, BTNR_state, BTNC_state, config_state      : std_logic := '0';
     
-    signal reset, rst_sig: std_logic := '0';
 
     type lock_type is (locked, unlocked, change);
     signal lock_state, lock_next: lock_type := locked;
@@ -57,10 +56,10 @@ ARCHITECTURE behavior OF top_level IS
 
 BEGIN
 
-    reset <= rst or rst_sig;
-    process(clk, reset)
+    
+    process(clk, rst)
     begin
-        if (reset = '1') then         -- reset
+        if (rst = '1') then         -- reset
             if (rst_hard = '1') then
                 combination <= default_combination;
             end if;
@@ -70,7 +69,6 @@ BEGIN
             BTNL_state   <= '0';
             BTNR_state   <= '0';
             direction    <= '1';
-            rst_sig      <= '0';
         elsif (clk'event and clk = '1') then
             -- Left
             if (BTNL = '1' and BTNL_state = '0') then
@@ -110,11 +108,26 @@ BEGIN
                 when unlocked =>
                     state_unlocked <= '1';
                     if (BTNC = '1' and BTNC_state = '0') then
-                        rst_sig <= '1';
+                    
+                       
+            data         <= (others => '0');
+            active_seg   <= n_digits - 1;
+            BTNL_state   <= '0';
+            BTNR_state   <= '0';
+            direction    <= '1';
+                        
                         lock_next <= locked;
                     end if;
                     if (config = '1' and config_state = '0') then
-                        rst_sig <= '1';
+                       
+                        
+			data         <= (others => '0');
+            active_seg   <= n_digits - 1;
+            BTNL_state   <= '0';
+            BTNR_state   <= '0';
+            direction    <= '1';
+                        
+                        
                         lock_next <= change;
                     end if;
                 when change =>
@@ -122,6 +135,7 @@ BEGIN
                     if (BTNC = '1') then
                         combination <= to_integer(unsigned(data));
                         lock_next <= locked;
+ 
                     end if;
                     if (config = '1' and config_state = '0') then
                         lock_next <= unlocked;
